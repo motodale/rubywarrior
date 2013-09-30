@@ -26,23 +26,28 @@ end
 
 
 
+
 class Player
   def play_turn(warrior)
-  @health = nil
+
   space = warrior.feel
   ecaps = warrior.feel(:backward)
 
   @health = warrior.health unless @health
   ouch = @health > warrior.health
 
-
      if space.empty?
-        if warrior.health < @health && !ouch
-          warrior.rest!
+        if warrior.health <= Bleeding
+          warrior.walk! :backward
         else
           warrior.walk!
         end
      else
+      if warrior.health < Bezerk
+        warrior.rest!
+      else
+        warrior.awalk!
+      end
       if space.captive?
         warrior.rescue!
       else
@@ -51,6 +56,4 @@ class Player
     end
      @health = warrior.health
   end
-
-
 end
